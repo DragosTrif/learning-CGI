@@ -11,7 +11,7 @@ my $query = CGI->new();
 my $smtp = Net::SMTP->new('localhost');
 
 # Set to the name of the to address
-my $address = "trif_dragos\@yahoo.com";
+my $address = "webmaster\@rc3.org";
 my $error_message = "";
 my ($from, $subject, $body);
 
@@ -77,7 +77,7 @@ sub validate_form {
 		$error_message .= "<li>You need to specify a recipient for ";
 		$error_message .= "the message.</li>\n";
 	}
-	if ($from eq "drd.trif\@gmail.com") {
+	if ($from !~ m/^[\w\.\-_]+\@[\w\.]+$/gi) {
 		$error_message .= "<li>The email address you entered is invalid,";
 		$error_message .= "please enter a valid address. </li>\n";
 	}
