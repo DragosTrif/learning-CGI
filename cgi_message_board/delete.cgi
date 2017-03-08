@@ -32,7 +32,6 @@ sub find_topic {
 	opendir (my $dh, $topic_directory) or die "Can’t open '$topic_directory' $!:";
 	my @topics_file = grep {/\.xml/} readdir($dh);
 	foreach my $topic (@topics_file) {
-		#print $topic,"\n";
 		display_topic($topic);
 	}
 
