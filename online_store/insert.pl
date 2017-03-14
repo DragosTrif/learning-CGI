@@ -6,8 +6,8 @@ use DBI;
 use Carp 'croak';
 
 
-my $user = 'root';
-my $pw = 1;
+my $user = 'user';
+my $pw = 'pass';
 # connect to MySQL
 my $dbh = DBI->connect("DBI:mysql:host=localhost;port=3306", $user, $pw);
 $dbh->do("USE my_store");
