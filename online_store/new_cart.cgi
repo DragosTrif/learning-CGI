@@ -11,8 +11,8 @@ my $query = CGI->new();
 
 my $database = 'my_store';
 my $db_server = 'localhost';
-my $user = 'user';
-my $password = 'pass';
+my $user = 'root';
+my $password = 1;
 
 my ($session_id, $page_title, $dbh, $sth);
 
@@ -65,10 +65,10 @@ sub get_cart_contents {
 	my $sql_select = qq[SELECT cart.product_id,
 		quantity, product_name, product_price
 		FROM cart, products
-		WHERE session_id = '$session_id'
+		WHERE session_id = ?
 		AND cart.product_id = products.product_id];
 	$sth = $dbh->prepare($sql_select) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
-	my $rv = $sth->execute or die "Couldn’t prepare the query:", $sth->errstr, "\n";
+	my $rv = $sth->execute($session_id) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
 }
 
 sub print_cart {
@@ -113,8 +113,8 @@ sub db_cleanup {
 sub remove_item {
 	my $product_id = $query->param('product_id');
 	my $sql_delete = qq[DELETE FROM cart
-		WHERE session_id = '$session_id'
-		AND product_id = $product_id];
+		WHERE session_id = ?
+		AND product_id = ?];
 	$sth = $dbh->prepare($sql_delete) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
-	my $rv = $sth->execute or die "Couldn’t exectute the query:", $sth->errstr, "\n";
+	my $rv = $sth->execute($session_id, $product_id) or die "Couldn’t exectute the query:", $sth->errstr, "\n";
 }
