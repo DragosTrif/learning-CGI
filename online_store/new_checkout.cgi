@@ -11,8 +11,8 @@ my $query = CGI->new();
 
 my $database = 'my_store';
 my $db_server = 'localhost';
-my $user = 'user';
-my $password = 'pass';
+my $user = 'root';
+my $password = 1;
 
 my ($session_id, $page_title, $cart_query, $dbh, $sth, $name, $address,
 	$city, $state, $zip, $cc_type, $cc_number, $exp_month, $exp_year);
@@ -91,9 +91,9 @@ sub db_connect {
 
 sub get_cart_contents {
 	my $sql_select = qq[SELECT product_id, quantity
-		FROM cart WHERE session_id = '$session_id'];
+		FROM cart WHERE session_id = ?];
 	$cart_query = $dbh->prepare($sql_select) or die "Couldn't prepare the query:", $cart_query->errstr, "\n";
-	my $rv = $cart_query->execute or die "Couldn't execute select statement: ", $cart_query->errstr, "\n";	
+	my $rv = $cart_query->execute($session_id) or die "Couldn't execute select statement: ", $cart_query->errstr, "\n";	
 }
 
 sub print_form {
@@ -204,10 +204,10 @@ sub insert_order {
 
 sub empty_cart {
 	my $sql_delete = qq[DELETE FROM cart
-		WHERE session_id = $session_id];
+		WHERE session_id = ?];
 
 	$sth = $dbh->prepare($sql_delete)or die "Couldn't prepare the query:", $sth->errstr, "\n";
-	my $rv = $sth->execute or die "Couldn't execute delete statement: ", $sth->errstr, "\n";
+	my $rv = $sth->execute($session_id) or die "Couldn't execute delete statement: ", $sth->errstr, "\n";
 	
 }
 
