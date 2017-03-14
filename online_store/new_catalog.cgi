@@ -1,4 +1,4 @@
-!/usr/bin/perl
+#!/usr/bin/perl
 
 use warnings;
 use strict;
@@ -11,8 +11,8 @@ my $query = CGI->new();
 
 my $database = 'my_store';
 my $db_server = 'localhost';
-my $user = 'user';
-my $password = 'pass';
+my $user = 'root';
+my $password = 1;
 
 my ($session_id, $dbh, $sth, $product_id, $quantity, $action);
 
@@ -116,10 +116,10 @@ sub add_to_cart {
 		# Since they have a session, let’s see if they
 		# already have the product in their cart.
 		my $sql_select = qq[SELECT quantity FROM cart 
-		WHERE session_id = '$session_id' 
-		AND product_id = $product_id];
+		WHERE session_id = ? 
+		AND product_id = ?];
 		$sth = $dbh->prepare($sql_select) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
-		my $rv = $sth->execute or die "Couldn’t execute select statement: ", $sth->errstr, "\n";
+		my $rv = $sth->execute($session_id, $product_id) or die "Couldn’t execute select statement: ", $sth->errstr, "\n";
 
 		# If a record was found, we need to update it.
 		# Otherwise we can just insert a new record.
@@ -140,9 +140,9 @@ sub add_to_cart {
 	} else {
 		my $new_quantity = $quantity + $rec_quantity;
 		my $sql_update = qq[UPDATE cart SET quantity = ?
-			WHERE session_id = $session_id AND product_id = $product_id];
+			WHERE session_id = ? AND product_id = ?];
 		$sth = $dbh->prepare($sql_update) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
-		my $rv = $sth->execute($quantity) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
+		my $rv = $sth->execute($quantity, $session_id, $product_id) or die "Couldn’t prepare the query:", $sth->errstr, "\n";
 		my $rc = $sth->finish;
 	}
 	
