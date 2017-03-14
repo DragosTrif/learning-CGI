@@ -1,0 +1,6 @@
+1:simm card:64 megabyte SIMM:99.00
+2:video card:3D Video Card:199.00
+3:dvd-rom:DVD-ROM Drive:79.00
+4:processor:500mhz Athlon processor:249.00
+5:network adapter:Ethernet adapter:19.00
+6:monitor:19 inch monitor:319.00
